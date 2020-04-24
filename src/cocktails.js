@@ -84,7 +84,9 @@ export class RandomCocktailService {
       return ingredients;
     }
   }
+}
 
+export class GiphyService {
   async giphyCall(drink) {
     try {
       let response = await fetch(`http://api.giphy.com/v1/gifs/search?api_key=${process.env.API_KEY_GIPHY}&q=${drink}`);

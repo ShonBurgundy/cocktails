@@ -3,8 +3,7 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
-import { CocktailService } from './../src/cocktails';
-import { RandomCocktailService } from './../src/cocktails';
+import { CocktailService, RandomCocktailService, GiphyService } from './../src/cocktails';
 
 function displayIngredientList(ingredientArray) {
   let ingredientListDisplay = $("#showIngredientsList");
@@ -57,6 +56,7 @@ $(document).ready(function() {
     if (drink !== "") {
       (async () => {
         let cocktailService = new CocktailService();
+        let giphyService = new GiphyService();
         const response = await cocktailService.getCocktailInfo(drink);
     
         if (response.drinks === null) {
@@ -71,6 +71,9 @@ $(document).ready(function() {
           //Show below in a UL
           displayCocktail(drink.toUpperCase());
           displayIngredientList(ingredientArray);
+          const responseGiph = await giphyService.giphyCall(drink);
+        let gifUrl = giphyService.getGif(responseGiph);
+        displayGif(gifUrl);
         } else {
           $("#showDrinksList").text("");
           $("#showIngredientsList").text("");
@@ -89,6 +92,7 @@ $(document).ready(function() {
     if (drink !== "") {
       (async () => {
         let cocktailService = new CocktailService();
+        let giphyService = new GiphyService();
         const response = await cocktailService.getCocktailInfo(drink);
         if (response.drinks === null) {
           $("#showDrinksList").text("");
@@ -99,6 +103,9 @@ $(document).ready(function() {
           $("#showIngredientsList").text("");
           let drinkList = cocktailService.getDrinkList(response);
           displayCocktailList(drinkList);
+          const responseGiph = await giphyService.giphyCall(drink);
+        let gifUrl = giphyService.getGif(responseGiph);
+        displayGif(gifUrl);
         } else {
           $("#showDrinksList").text("");
           $("#showIngredientsList").text("");
@@ -115,6 +122,7 @@ $(document).ready(function() {
   $("#randomSearch").click(function() {
     (async () => {
       let randomCocktailService = new RandomCocktailService();
+      let giphyService = new GiphyService();
       const response = await randomCocktailService.getRandomCocktailInfo();
       if (response) {
         $("#showErrors").text("");
@@ -123,8 +131,8 @@ $(document).ready(function() {
         let ingredients = randomCocktailService.getRandomIngredientArray(response);
         displayCocktail(drink.toUpperCase());
         displayIngredientList(ingredients);
-        const responseGiph = await randomCocktailService.giphyCall(drink);
-        let gifUrl = randomCocktailService.getGif(responseGiph);
+        const responseGiph = await giphyService.giphyCall(drink);
+        let gifUrl = giphyService.getGif(responseGiph);
         displayGif(gifUrl);
       } else {
         $("#showDrinksList").text("");
